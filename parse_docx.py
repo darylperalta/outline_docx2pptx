@@ -2,20 +2,20 @@ from pptx import Presentation
 from docx import Document
 # from docx import getdocumenttext
 
-def parseOutline():
+def parseOutline(doc_fn = 'sample.docx', verbose = False):
 
 	occasion = ''
 	theme = ''
 	venue = ''
 	date = ''
-	author = ''
+	author = 'Bp. Reuben Abante'
 	text_verses = []
 	text_book = ''
 
-	doc = Document('sample.docx')
+	doc = Document(doc_fn)
 	# print(getdocumenttext(document))
-	print('sdlfasf')
-	print(len(doc.paragraphs))
+	# print('sdlfasf')
+	# print(len(doc.paragraphs))
 
 	for para in doc.paragraphs:
 		if 'Occasion' in para.text:
@@ -31,7 +31,8 @@ def parseOutline():
 			title = para.text.split(':')[1].strip()
 
 		# print('para ', para.text)
-	print(occasion, theme, venue, date)
+	if verbose == True:
+		print(occasion, theme, venue, date)
 
 	# for para in doc.paragraphs:
 	for i in range(len(doc.paragraphs)):
@@ -47,15 +48,15 @@ def parseOutline():
 				text_verses.append(doc.paragraphs[i].text.strip())
 				if doc.paragraphs[i].text == 'KJV':
 					break
-				elif len(doc.paragraphs[i].text) == 0:
-					print('throw')
+				# elif len(doc.paragraphs[i].text) == 0:
+					# print('throw')
 				i += 1
-	print('text:')
-	print(text_book)
-	for text in text_verses:
-		print(text)
+	# print('text:')
+	# print(text_book)
+	# for text in text_verses:
+	# 	print(text)
 
-	return occasion, theme, venue, date, author, text, text_book
+	return occasion, theme, venue, date, author, text_book, text_verses
 	# for para in doc.paragraphs:
 	# 	print('para', para.text)	
 def main():
