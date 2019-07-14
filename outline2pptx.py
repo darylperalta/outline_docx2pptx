@@ -147,8 +147,9 @@ class Outline2pptx:
     '''
     Class for creating pptx
     '''
-    def __init__(self, doc_fn = 'sample.docx', template_pptx = 'template.pptx', out_pptx='out.pptx', verbose = True):
-        occasion, theme, venue, date, speaker, text_book, text_verses = parseOutline(doc_fn)
+    def __init__(self, doc_fn = '14_07_2019.docx', template_pptx = 'template.pptx', out_pptx='14_07_2019.pptx', verbose = True):
+        title, occasion, theme, venue, date, speaker, text_book, text_verses, bibleReading, message = parseOutline(doc_fn)
+        self.title = title
         self.occasion = occasion
         self.theme  = theme
         self.venue = venue
@@ -156,12 +157,16 @@ class Outline2pptx:
         self.speaker = speaker
         self.text_book = text_book
         self.text_verses = text_verses
+        self.bibleReading = bibleReading
         self.verbose = verbose
         self.prs = Presentation(template_pptx)
         self.out_pptx = out_pptx
+        self.message = message
 
     def create_pptx(self):
         if self.verbose == True:
+            print('start')
+
             for slide in self.prs.slides:
                 print('slides: ', len(self.prs.slides))
                 print('slide shapes shape',len(slide.shapes))
@@ -176,8 +181,12 @@ class Outline2pptx:
                             print(run.text)
         self.create_text_slide()
         self.create_speaker_slide()
+        self.create_title_slide()
+        self.create_message_slide()
         self.prs.save(self.out_pptx)
-        print('self date', self.date)
+        # print('self date', self.date)
+        # print('title', self.title)
+
     # slide = prs.slides.add_slide(6)
     def create_speaker_slide(self):
         slide_temp = duplicate_slide(self.prs, TEMPLATE_SPEAKER_IDX)
@@ -189,12 +198,38 @@ class Outline2pptx:
         slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.speaker
         slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.venue
         slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.occasion + ', '+ self.date
+
+    def create_title_slide(self):
+        slide_temp = duplicate_slide(self.prs, TEMPLATE_TITLE_IDX)
+        slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.title
+        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.text_book
+        slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.speaker
+        slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text = self.venue
+        slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text = self.occasion + ', '+ self.date
+
     def create_text_slide(self):
+        for i in range(len(self.bibleReading)):
+            for j in range(len(self.bibleReading[i]['verses'])):
+                slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleReading[i]['book']
+                slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleReading[i]['verses'][j]
+
         for i in range(len(self.text_verses)):
             slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
             slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.text_book
             slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.text_verses[i]
 
+    def create_message_slide(self):
+        for i in range(len(self.message)):
+            if self.message[i]['type'] == 'bible':
+                for j in range(len(self.message[i]['verses'])):
+                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.message[i]['verses'][j]
+            elif self.message[i]['type'] == 'point':
+                slide_temp = duplicate_slide(self.prs, TEMPLATE_MAINPOINT_IDX)
+                slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['text']
+                slide_temp.shapes[2].text_frame.paragraphs[0].runs[0].text = self.title
 
 
 
