@@ -12,6 +12,8 @@ bibleBooks = [
     "Gen",
 
     "Exodus",
+    "Exo",
+
     "Leviticus",
     "Lev ",
 
@@ -230,12 +232,12 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 		if i >= len(doc.paragraphs):
 			break
 		# print(doc.paragraphs[i].text)
-	print(i)
-	print()
+	# print(i)
+	# print()
 	i = 0
 	temp_verses = []
 	while(i < len(doc.paragraphs)):
-		print(i)
+		# print(i)
 		if 'INTRODUCTION' in doc.paragraphs[i].text:
 
 			# print('yeah')
@@ -255,7 +257,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 			# break
 			while(i < len(doc.paragraphs)):
 				if (checkBible(doc.paragraphs[i].text.strip()) and (len(doc.paragraphs[i].text.strip()) != 0)):
-					print('true bible')
+					# print('true bible')
 					# print(doc.paragraphs[i].text)
 					# print(len(doc.paragraphs[i].text))
 					# print('wjat')
@@ -298,9 +300,9 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 					message.append({'type': 'bible', 'book':temp_book, 'verses':temp_verses})
 					temp_verses = []
 				elif (((doc.paragraphs[i].style.name == 'List Paragraph') or (doc.paragraphs[i].style.name == 'List Numbers'))  and (len(doc.paragraphs[i].text.strip()) != 0)):
-					print('True point')
+					# print('True point')
 					point = doc.paragraphs[i].text.strip()
-					print('point', point, len(doc.paragraphs[i].text.strip()))
+					# print('point', point, len(doc.paragraphs[i].text.strip()))
 					message.append({'type': 'point', 'text': point})
 
 				# else:

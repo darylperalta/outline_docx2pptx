@@ -2,6 +2,8 @@ from pptx import Presentation
 from parse_docx import parseOutline
 import copy
 import six
+import argparse
+import sys
 '''
 prs = Presentation()
 title_slide_layout = prs.slide_layouts[0]
@@ -168,17 +170,17 @@ class Outline2pptx:
             print('start')
 
             for slide in self.prs.slides:
-                print('slides: ', len(self.prs.slides))
-                print('slide shapes shape',len(slide.shapes))
+                # print('slides: ', len(self.prs.slides))
+                # print('slide shapes shape',len(slide.shapes))
                 for shape in slide.shapes:
-                    print('paragraph', len(shape.text_frame.paragraphs))
+                    # print('paragraph', len(shape.text_frame.paragraphs))
                     if not shape.has_text_frame:
                         continue
                     for paragraph in shape.text_frame.paragraphs:
                         print('runs ', len(paragraph.runs))
                         for run in paragraph.runs:
-                            # text_runs.append(run.text)
-                            print(run.text)
+                            text_runs.append(run.text)
+                            # print(run.text)
         self.create_text_slide()
         self.create_speaker_slide()
         self.create_title_slide()
@@ -233,9 +235,24 @@ class Outline2pptx:
 
 
 
-def main():
-    out2pptx = Outline2pptx(verbose=True)
+def main(args=None):
+    # Parse arguments
+    if args is None:
+        args = sys.argv[1:]
+    # args = parse_args(args)
+
+    parser = argparse.ArgumentParser(description='Input File.')
+    #
+    parser.add_argument('--input_docx', type=str, default='sample.docx',help="Path to input outline docx file")
+    parser.add_argument('--input_template', type=str, default='template.pptx',help="Path to input outline template pptx file")
+    parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to input outline template pptx file")
+    parser.add_argument('--verbose', dest='verbose', action='store_true', help="Verbose")
+    args = parser.parse_args(args)
+    # print('verbose', args.verbose)
+
+    out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template, out_pptx=args.out_pptx)
     out2pptx.create_pptx()
+    print('Powerpoint written at ', args.out_pptx)
     # create_pptx(True)
 
 if __name__ == '__main__':
