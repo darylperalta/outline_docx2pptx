@@ -71,7 +71,7 @@ bibleBooks = [
     "John",
     "Acts",
     "Romans",
-    "Rom",
+    "Rom ",
     "1 Corinthians",
     "1 Cor",
     "2 Corinthians",
@@ -177,9 +177,10 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 					i += 1
 				# print('text: ', doc.paragraphs[i].text)	
 				# print('text: ', len(doc.paragraphs[i].text))	
-				text_verses.append(doc.paragraphs[i].text.strip())
 				if doc.paragraphs[i].text == 'KJV':
 					break
+				text_verses.append(doc.paragraphs[i].text.strip())
+				
 				# elif len(doc.paragraphs[i].text) == 0:
 					# print('throw')
 				i += 1
@@ -289,6 +290,8 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 							# print('text: ', doc.paragraphs[i].text)	
 							# print('text: ', len(doc.paragraphs[i].text))	
 							if i >= len(doc.paragraphs):
+								break
+							if doc.paragraphs[i].text == 'KJV':
 								break
 							temp_verses.append(doc.paragraphs[i].text.strip())
 							# if (doc.paragraphs[i].text != 'KJV') or (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE'):

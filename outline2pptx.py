@@ -243,9 +243,9 @@ def main(args=None):
 
     parser = argparse.ArgumentParser(description='Input File.')
     #
-    parser.add_argument('--input_docx', type=str, default='sample.docx',help="Path to input outline docx file")
-    parser.add_argument('--input_template', type=str, default='template.pptx',help="Path to input outline template pptx file")
-    parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to input outline template pptx file")
+    parser.add_argument('--input_docx', type=str, default='sample.docx',help="Path to input outline docx file. Default = sample.docx")
+    parser.add_argument('--input_template', type=str, default='template.pptx',help="Path to input outline template pptx file. Default = template.pptx")
+    parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to input outline template pptx file. Default = out.pptx")
     parser.add_argument('--verbose', dest='verbose', action='store_true', help="Verbose")
     args = parser.parse_args(args)
     # print('verbose', args.verbose)
