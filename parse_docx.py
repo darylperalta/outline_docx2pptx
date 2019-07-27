@@ -326,36 +326,26 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 	# 	print(text)
 
 	return title, occasion, theme, venue, date, author, text_book, text_verses, bibleReading, message
-	# for para in doc.paragraphs:
-	# 	print('para', para.text)	
-def main():
-	parseOutline()
-	# for i in range(5):
-	# i = 0
-	# while(i < 5):
-	# 	print(i)
-	# 	i+=1
-	# 	print(i)
-	# 	i+=1
-	# 	if i>= 5:
-	# 		break
-	# 	print(i)
-	# 	i+=1
 
-	# some_text = []
-	# verse1 = []
-	# verse2 = []
-	# verse1.append('verse1a')
-	# verse1.append('verse1b')
-	# verse2.append('verse2a')
-	# verse2.append('verse2b')
-	# verse1.append('verse1c')
-	# # verse1 = 'verse'
-	# some_text.append({'text':'text1','verses':verse1})
-	# some_text.append({'text':'text2','verses':verse2})
-	# # print(some_text)
-	# for text in some_text:
- #  		print(text['text'], text['verses'])
+def parseLyrics(doc_fn = 'sample_lyrics.docx', verbose = False):
+
+	doc = Document(doc_fn)
+	
+	# for para in doc.paragraphs:
+	lyrics = []
+	
+	for i in range(len(doc.paragraphs)):
+		if ((len(doc.paragraphs[i].text.strip()) != 0)):
+			lyrics.append(doc.paragraphs[i].text.strip())
+		i+=1
+
+	# print('lyrics')
+	# print(lyrics)
+
+	return lyrics
+
+def main():
+	parseLyrics()
 
 
 if __name__ == '__main__':
