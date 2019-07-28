@@ -1,4 +1,5 @@
 from pptx import Presentation
+from pptx.enum.text import MSO_AUTO_SIZE
 from parse_docx import parseOutline
 import copy
 import six
@@ -230,12 +231,18 @@ class Outline2pptx:
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.message[i]['verses'][j]
             elif self.message[i]['type'] == 'point':
                 slide_temp = duplicate_slide(self.prs, TEMPLATE_MAINPOINT_IDX)
+                print(slide_temp.shapes[1].text_frame.auto_size)
+                # slide_temp.shapes[1].text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+                # slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].font.underline = True
                 slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['text']
+                print(len( slide_temp.shapes[1].text_frame.paragraphs[0].runs))
+                print(self.message[i]['text'])
                 slide_temp.shapes[2].text_frame.paragraphs[0].runs[0].text = self.title
 
 
 
 def main(args=None):
+    print('To create two versions: use --two_versions')
     # Parse arguments
     if args is None:
         args = sys.argv[1:]
@@ -245,14 +252,25 @@ def main(args=None):
     #
     parser.add_argument('--input_docx', type=str, default='sample.docx',help="Path to input outline docx file. Default = sample.docx")
     parser.add_argument('--input_template', type=str, default='template.pptx',help="Path to input outline template pptx file. Default = template.pptx")
-    parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to input outline template pptx file. Default = out.pptx")
+    parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to output outline pptx file. Default = out.pptx")
+    parser.add_argument('--two_versions', dest='two_versions', action='store_true', help="Creates two versions of pptx", default=True)
     parser.add_argument('--verbose', dest='verbose', action='store_true', help="Verbose")
+    parser.add_argument('--input_template2', type=str, default='template2.pptx',help="Path to input 2nd outline template pptx file. Default = template2.pptx")
+    parser.add_argument('--out_pptx2', type=str, default='out2.pptx',help="Path to 2nd output outline pptx file. Default = out2.pptx")    
+
     args = parser.parse_args(args)
+    print(args.two_versions)
     # print('verbose', args.verbose)
 
     out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template, out_pptx=args.out_pptx)
     out2pptx.create_pptx()
     print('Powerpoint written at ', args.out_pptx)
+
+    if args.two_versions:
+        out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template2, out_pptx=args.out_pptx2)
+        out2pptx.create_pptx()
+        print('Powerpoint written at ', args.out_pptx2)
+
     # create_pptx(True)
 
 if __name__ == '__main__':
