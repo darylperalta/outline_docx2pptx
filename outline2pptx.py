@@ -23,6 +23,11 @@ TEMPLATE_TITLE_IDX = 2
 TEMPLATE_MAINPOINT_IDX = 3
 TEMPLATE_SUBPOINT_IDX = 4
 
+def delete_slides(presentation, index):
+        xml_slides = presentation.slides._sldIdLst  
+        slides = list(xml_slides)
+        xml_slides.remove(slides[index])     
+
 
 def duplicate_slide(pres,index):
     template = pres.slides[index]
@@ -168,7 +173,7 @@ class Outline2pptx:
 
     def create_pptx(self):
         if self.verbose == True:
-            print('start')
+            # print('start')
 
             for slide in self.prs.slides:
                 # print('slides: ', len(self.prs.slides))
@@ -186,6 +191,12 @@ class Outline2pptx:
         self.create_speaker_slide()
         self.create_title_slide()
         self.create_message_slide()
+        delete_slides(self.prs, 0)
+        delete_slides(self.prs, 0)
+        delete_slides(self.prs, 0)
+        delete_slides(self.prs, 0)
+        delete_slides(self.prs, 0)
+        
         self.prs.save(self.out_pptx)
         # print('self date', self.date)
         # print('title', self.title)
@@ -231,12 +242,12 @@ class Outline2pptx:
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.message[i]['verses'][j]
             elif self.message[i]['type'] == 'point':
                 slide_temp = duplicate_slide(self.prs, TEMPLATE_MAINPOINT_IDX)
-                print(slide_temp.shapes[1].text_frame.auto_size)
+                # print(slide_temp.shapes[1].text_frame.auto_size)
                 # slide_temp.shapes[1].text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
                 # slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].font.underline = True
                 slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['text']
-                print(len( slide_temp.shapes[1].text_frame.paragraphs[0].runs))
-                print(self.message[i]['text'])
+                # print(len( slide_temp.shapes[1].text_frame.paragraphs[0].runs))
+                # print(self.message[i]['text'])
                 slide_temp.shapes[2].text_frame.paragraphs[0].runs[0].text = self.title
 
 

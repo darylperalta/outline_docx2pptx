@@ -23,7 +23,7 @@ bibleBooks = [
     "Num ",
 
     "Deuteronomy",
-    "Deut ",
+    "Deut",
 
     "Joshua",
     "Judges",
@@ -50,6 +50,7 @@ bibleBooks = [
     "Eccl",
     "Song of Solomon",
     "Isaiah",
+    "Isa",
     "Jeremiah",
     "Lamentations",
     "Ezekiel",
@@ -205,7 +206,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 				i+=1
 				if i >= len(doc.paragraphs):
 					break	
-				while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE')):
+				while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
 					while(len(doc.paragraphs[i].text)==0):
 						i += 1
 						if i >= len(doc.paragraphs):
@@ -284,7 +285,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 					else:
 						temp_book = doc.paragraphs[i].text.strip()
 						i+=1
-						while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE')):
+						while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
 							while(len(doc.paragraphs[i].text)==0):
 								i += 1
 								if i >= len(doc.paragraphs):
@@ -350,15 +351,18 @@ def parseLyricsPPTX(lyrics_dir = 'lyrics_dir\\', verbose = True):
 
 	# doc = Document(doc_fn)
 	song_fn = glob(lyrics_dir+'*.pptx')
+	# song_fn2 = glob(lyrics_dir+'*.ppt')
+	# song_fn = song_fn + song_fn2
 	song_lyrics = []
 	for i in range(len(song_fn)):
+		# print(song_fn[i])
 		prs = Presentation(song_fn[i])
 		lyrics = []
 		if verbose == True:
 	        # print('start')
 			print(len(prs.slides))
 			for slide in prs.slides:
-				print(len(slide.shapes))
+				# print(len(slide.shapes))
 				i = 0
 				for shape in slide.shapes:
 					text = ''
@@ -369,15 +373,15 @@ def parseLyricsPPTX(lyrics_dir = 'lyrics_dir\\', verbose = True):
 					    	# print('text', run.text)
 					    	text = text + ' ' + run.text.strip()
 					    	text = text.strip()
-					    	print('text', text)
-					if (len(text) != 0) and (text != 'end') and (text != 'END') and (text != 'end.') and (text != 'END.'):
+					    	# print('text', text)
+					if (len(text) != 0) and (text != 'end') and (text != 'END') and (text != 'end.') and (text != 'END.') and (text != 'CHORUS:') and (text != 'CHORUS.') and (text != 'CHORUS') and (text != 'Chorus:') and (text != 'Chorus.') and (text != 'Chorus'):
 						lyrics.append(text)
 			song_lyrics.append(lyrics)
 
 	song_fn.sort()
-	print(song_fn)
-	print('song lyrics')
-	print(song_lyrics)
+	# print(song_fn)
+	# print('song lyrics')
+	# print(song_lyrics)
 
 	return song_fn, song_lyrics
 
