@@ -170,6 +170,7 @@ class Outline2pptx:
         self.prs = Presentation(template_pptx)
         self.out_pptx = out_pptx
         self.message = message
+        self.max_char = 146
 
     def create_pptx(self):
         if self.verbose == True:
@@ -239,7 +240,39 @@ class Outline2pptx:
                 for j in range(len(self.message[i]['verses'])):
                     slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
-                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.message[i]['verses'][j]
+                    # print('book', self.message[i]['book'])
+                    if len(self.message[i]['verses'][j]) > self.max_char:
+                        print(self.message[i]['book'])
+                        verse = self.message[i]['verses'][j]
+                        verse_split = verse.split()
+                        print(verse_split)
+                        # verse_words.append(verse_word)
+                        verses_word = ''
+                        split_idx = 0
+                        for verse_idx in range(len(verse_split)):
+                            verses_word += verse_split[verse_idx] + ' '
+                            if len(verses_word) + len(verse_split[verse_idx+1]) > self.max_char:
+                                split_idx = verse_idx
+                                break
+                        print('split id',split_idx)
+                        print(verse_split[split_idx])
+                        text1 = ''
+                        text2 = ''
+                        for verse_idx in range(split_idx):
+                            text1 += verse_split[verse_idx] + ' '
+                        for verse_idx in range(split_idx,len(verse_split)):
+                            text2 += verse_split[verse_idx] + ' '
+                        print('text1', text1)
+                        print(len(text1))
+                        print('text2', text2)
+                        print(len(text2))
+                        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
+                        slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                        slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
+                        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
+                    else:
+                        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.message[i]['verses'][j]
+
             elif self.message[i]['type'] == 'point':
                 slide_temp = duplicate_slide(self.prs, TEMPLATE_MAINPOINT_IDX)
                 # print(slide_temp.shapes[1].text_frame.auto_size)
