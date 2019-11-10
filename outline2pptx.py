@@ -155,7 +155,7 @@ class Outline2pptx:
     '''
     Class for creating pptx
     '''
-    def __init__(self, doc_fn = '14_07_2019.docx', template_pptx = 'template.pptx', out_pptx='14_07_2019.pptx', verbose = True):
+    def __init__(self, doc_fn = '14_07_2019.docx', template_pptx = 'template.pptx', out_pptx='14_07_2019.pptx', template_id = 0, verbose = True):
         title, occasion, theme, venue, date, speaker, text_book, text_verses, bibleReading, message = parseOutline(doc_fn)
         self.title = title
         self.occasion = occasion
@@ -170,8 +170,14 @@ class Outline2pptx:
         self.prs = Presentation(template_pptx)
         self.out_pptx = out_pptx
         self.message = message
-        self.max_char = 146
-
+        # self.max_char = 143
+        # self.max_char = 163
+        if template_id == 0:
+            # self.max_char = 143
+            self.max_char = 163
+        else:
+            # self.max_char = 195
+            self.max_char = 193
     def create_pptx(self):
         if self.verbose == True:
             # print('start')
@@ -242,10 +248,10 @@ class Outline2pptx:
                     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
                     # print('book', self.message[i]['book'])
                     if len(self.message[i]['verses'][j]) > self.max_char:
-                        print(self.message[i]['book'])
+                        # print(self.message[i]['book'])
                         verse = self.message[i]['verses'][j]
                         verse_split = verse.split()
-                        print(verse_split)
+                        # print(verse_split)
                         # verse_words.append(verse_word)
                         verses_word = ''
                         split_idx = 0
@@ -262,9 +268,13 @@ class Outline2pptx:
                             text1 += verse_split[verse_idx] + ' '
                         for verse_idx in range(split_idx,len(verse_split)):
                             text2 += verse_split[verse_idx] + ' '
+
+                        text1 = text1 + '..'
                         print('text1', text1)
                         print(len(text1))
+
                         print('text2', text2)
+                        text2 = '.. ' + text2 
                         print(len(text2))
                         slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
                         slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
@@ -306,12 +316,12 @@ def main(args=None):
     print(args.two_versions)
     # print('verbose', args.verbose)
 
-    out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template, out_pptx=args.out_pptx)
+    out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template, out_pptx=args.out_pptx,template_id = 0)
     out2pptx.create_pptx()
     print('Powerpoint written at ', args.out_pptx)
 
     if args.two_versions:
-        out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template2, out_pptx=args.out_pptx2)
+        out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template2, out_pptx=args.out_pptx2, template_id =1)
         out2pptx.create_pptx()
         print('Powerpoint written at ', args.out_pptx2)
 
