@@ -10,6 +10,11 @@ TEMPLATE_TITLE_IDX = 0
 TEMPLATE_LYRICS_IDX = 1
 TEMPLATE_END_IDX = 2
 
+def delete_slides(presentation, index):
+        xml_slides = presentation.slides._sldIdLst  
+        slides = list(xml_slides)
+        xml_slides.remove(slides[index])  
+
 def duplicate_slide(pres,index):
     template = pres.slides[index]
     try:
@@ -94,11 +99,12 @@ class Lyrics2pptx:
 
 
     		i+=1
-	    	# print('sadf')
-
-
-
+			# print('sadf')
+    	delete_slides(self.prs,0)
+    	delete_slides(self.prs,0)
+    	delete_slides(self.prs,0)        
     	self.prs.save(self.out_pptx)
+
         # self.prs.save(self.out_pptx)
         # slide_temp.shapes[0].text_frame.paragraphs[1].runs[0].text = self.venue
         # self.prs.save(self.out_pptx)
