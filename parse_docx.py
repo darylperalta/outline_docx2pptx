@@ -200,7 +200,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 				i+=1
 				if i >= len(doc.paragraphs):
 					break	
-				while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
+				while((doc.paragraphs[i].text.strip() != 'KJV') and (doc.paragraphs[i].text.strip() != 'AMP') and (doc.paragraphs[i].text.strip() != 'BBE') and (doc.paragraphs[i].text.strip() != 'ESV') and (doc.paragraphs[i].text.strip() != 'NKJV')):
 					while(len(doc.paragraphs[i].text)==0):
 						i += 1
 						if i >= len(doc.paragraphs):
@@ -245,7 +245,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 				i+=1
 				if i >= len(doc.paragraphs):
 					break	
-				while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
+				while((doc.paragraphs[i].text.strip() != 'KJV') and (doc.paragraphs[i].text.strip() != 'AMP') and (doc.paragraphs[i].text.strip() != 'BBE') and (doc.paragraphs[i].text.strip() != 'ESV') and (doc.paragraphs[i].text.strip() != 'NKJV')):
 					while(len(doc.paragraphs[i].text)==0):
 						i += 1
 						if i >= len(doc.paragraphs):
@@ -324,7 +324,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 					else:
 						temp_book = doc.paragraphs[i].text.strip()
 						i+=1
-						while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
+						while((doc.paragraphs[i].text.strip() != 'KJV') and (doc.paragraphs[i].text.strip() != 'AMP') and (doc.paragraphs[i].text.strip() != 'BBE') and (doc.paragraphs[i].text.strip() != 'ESV') and (doc.paragraphs[i].text.strip() != 'NKJV')):
 							while(len(doc.paragraphs[i].text)==0):
 								i += 1
 								if i >= len(doc.paragraphs):
@@ -333,7 +333,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 							# print('text: ', len(doc.paragraphs[i].text))	
 							if i >= len(doc.paragraphs):
 								break
-							if doc.paragraphs[i].text == 'KJV':
+							if doc.paragraphs[i].text.strip() == 'KJV':
 								break
 							temp_verses.append(doc.paragraphs[i].text.strip())
 							# if (doc.paragraphs[i].text != 'KJV') or (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE'):

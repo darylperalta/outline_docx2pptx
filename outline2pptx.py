@@ -21,7 +21,8 @@ TEMPLATE_TEXT_IDX = 0
 TEMPLATE_SPEAKER_IDX = 1
 TEMPLATE_TITLE_IDX = 2
 TEMPLATE_MAINPOINT_IDX = 3
-TEMPLATE_SUBPOINT_IDX = 4
+TEMPLATE_TEXT_2L_IDX = 4
+TEMPLATE_SUBPOINT_IDX = 5
 
 def delete_slides(presentation, index):
         xml_slides = presentation.slides._sldIdLst  
@@ -176,9 +177,11 @@ class Outline2pptx:
         if template_id == 0:
             # self.max_char = 143
             self.max_char = 163
+            self.max_char2L = 84
         else:
             # self.max_char = 195
             self.max_char = 193
+            self.max_char2L = 122
     def create_pptx(self):
         if self.verbose == True:
             # print('start')
@@ -199,6 +202,7 @@ class Outline2pptx:
         self.create_speaker_slide()
         self.create_title_slide()
         self.create_message_slide()
+        delete_slides(self.prs, 0)
         delete_slides(self.prs, 0)
         delete_slides(self.prs, 0)
         delete_slides(self.prs, 0)
@@ -240,7 +244,11 @@ class Outline2pptx:
     def create_text_slide(self):
         for i in range(len(self.bibleReading)):
             for j in range(len(self.bibleReading[i]['verses'])):
-                slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                if len(self.bibleReading[i]['verses'][j]) > self.max_char2L:
+                    template_idx = TEMPLATE_TEXT_IDX
+                else:
+                    template_idx = TEMPLATE_TEXT_2L_IDX
+                slide_temp = duplicate_slide(self.prs, template_idx)
                 slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleReading[i]['book']
                 slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleReading[i]['verses'][j]
                 if len(self.bibleReading[i]['verses'][j]) > self.max_char:
@@ -273,7 +281,11 @@ class Outline2pptx:
                     text2 = '.. ' + text2 
                     # print(len(text2))
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
-                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    if len(text2) > self.max_char2L:
+                        template_idx = TEMPLATE_TEXT_IDX
+                    else:
+                        template_idx = TEMPLATE_TEXT_2L_IDX
+                    slide_temp = duplicate_slide(self.prs, template_idx)
                     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleReading[i]['book']
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
                 else:
@@ -286,7 +298,12 @@ class Outline2pptx:
 
         for i in range(len(self.bibleText)):
             for j in range(len(self.bibleText[i]['verses'])):
-                slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                if len(self.bibleText[i]['verses'][j]) > self.max_char2L:
+                    template_idx = TEMPLATE_TEXT_IDX
+                else:
+                    template_idx = TEMPLATE_TEXT_2L_IDX
+                slide_temp = duplicate_slide(self.prs, template_idx)
+                # slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                 slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleText[i]['book']
                 slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[i]['verses'][j]
                 if len(self.bibleText[i]['verses'][j]) > self.max_char:
@@ -319,7 +336,12 @@ class Outline2pptx:
                     text2 = '.. ' + text2 
                     # print(len(text2))
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
-                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    if len(text2) > self.max_char2L:
+                        template_idx = TEMPLATE_TEXT_IDX
+                    else:
+                        template_idx = TEMPLATE_TEXT_2L_IDX
+                    slide_temp = duplicate_slide(self.prs, template_idx)
+                    # slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleText[i]['book']
                     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
                 else:
@@ -329,7 +351,12 @@ class Outline2pptx:
         for i in range(len(self.message)):
             if self.message[i]['type'] == 'bible':
                 for j in range(len(self.message[i]['verses'])):
-                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    if len(self.message[i]['verses'][j]) > self.max_char2L:
+                        template_idx = TEMPLATE_TEXT_IDX
+                    else:
+                        template_idx = TEMPLATE_TEXT_2L_IDX
+                    slide_temp = duplicate_slide(self.prs, template_idx)
+                    # slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
                     # print('book', self.message[i]['book'])
                     if len(self.message[i]['verses'][j]) > self.max_char:
@@ -362,7 +389,12 @@ class Outline2pptx:
                         text2 = '.. ' + text2 
                         # print(len(text2))
                         slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
-                        slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                        if len(text2) > self.max_char2L:
+                            template_idx = TEMPLATE_TEXT_IDX
+                        else:
+                            template_idx = TEMPLATE_TEXT_2L_IDX
+                        slide_temp = duplicate_slide(self.prs, template_idx)
+                        # slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                         slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
                         slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
                     else:
