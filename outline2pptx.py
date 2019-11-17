@@ -156,15 +156,16 @@ class Outline2pptx:
     Class for creating pptx
     '''
     def __init__(self, doc_fn = '14_07_2019.docx', template_pptx = 'template.pptx', out_pptx='14_07_2019.pptx', template_id = 0, verbose = True):
-        title, occasion, theme, venue, date, speaker, text_book, text_verses, bibleReading, message = parseOutline(doc_fn)
+        title, occasion, theme, venue, date, speaker, bibleText, bibleReading, message = parseOutline(doc_fn)
         self.title = title
         self.occasion = occasion
         self.theme  = theme
         self.venue = venue
         self.date = date
         self.speaker = speaker
-        self.text_book = text_book
-        self.text_verses = text_verses
+        # self.text_book = text_book
+        # self.text_verses = text_verses
+        self.bibleText = bibleText
         self.bibleReading = bibleReading
         self.verbose = verbose
         self.prs = Presentation(template_pptx)
@@ -221,9 +222,17 @@ class Outline2pptx:
         slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.occasion + ', '+ self.date
 
     def create_title_slide(self):
+        text_books = ''
+        for text_id in range(len(self.bibleText)):
+            if text_id != len(self.bibleText) -1:
+                text_books = text_books + self.bibleText[text_id]['book'] + '; '
+            else:
+                text_books = text_books + self.bibleText[text_id]['book']
         slide_temp = duplicate_slide(self.prs, TEMPLATE_TITLE_IDX)
         slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.title
-        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.text_book
+        # slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[0]['book']
+        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text_books
+
         slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.speaker
         slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text = self.venue
         slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text = self.occasion + ', '+ self.date
@@ -234,11 +243,87 @@ class Outline2pptx:
                 slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                 slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleReading[i]['book']
                 slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleReading[i]['verses'][j]
+                if len(self.bibleReading[i]['verses'][j]) > self.max_char:
+                    # print(self.message[i]['book'])
+                    verse = self.bibleReading[i]['verses'][j]
+                    verse_split = verse.split()
+                    # print(verse_split)
+                    # verse_words.append(verse_word)
+                    verses_word = ''
+                    split_idx = 0
+                    for verse_idx in range(len(verse_split)):
+                        verses_word += verse_split[verse_idx] + ' '
+                        if len(verses_word) + len(verse_split[verse_idx+1]) > self.max_char:
+                            split_idx = verse_idx
+                            break
+                    # print('split id',split_idx)
+                    # print(verse_split[split_idx])
+                    text1 = ''
+                    text2 = ''
+                    for verse_idx in range(split_idx):
+                        text1 += verse_split[verse_idx] + ' '
+                    for verse_idx in range(split_idx,len(verse_split)):
+                        text2 += verse_split[verse_idx] + ' '
 
-        for i in range(len(self.text_verses)):
-            slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
-            slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.text_book
-            slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.text_verses[i]
+                    text1 = text1 + '..'
+                    # print('text1', text1)
+                    # print(len(text1))
+
+                    # print('text2', text2)
+                    text2 = '.. ' + text2 
+                    # print(len(text2))
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
+                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleReading[i]['book']
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
+                else:
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleReading[i]['verses'][j]
+
+        # for i in range(len(self.text_verses)):
+        #     slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+        #     slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.text_book
+        #     slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.text_verses[i]
+
+        for i in range(len(self.bibleText)):
+            for j in range(len(self.bibleText[i]['verses'])):
+                slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleText[i]['book']
+                slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[i]['verses'][j]
+                if len(self.bibleText[i]['verses'][j]) > self.max_char:
+                    # print(self.message[i]['book'])
+                    verse = self.bibleText[i]['verses'][j]
+                    verse_split = verse.split()
+                    # print(verse_split)
+                    # verse_words.append(verse_word)
+                    verses_word = ''
+                    split_idx = 0
+                    for verse_idx in range(len(verse_split)):
+                        verses_word += verse_split[verse_idx] + ' '
+                        if len(verses_word) + len(verse_split[verse_idx+1]) > self.max_char:
+                            split_idx = verse_idx
+                            break
+                    # print('split id',split_idx)
+                    # print(verse_split[split_idx])
+                    text1 = ''
+                    text2 = ''
+                    for verse_idx in range(split_idx):
+                        text1 += verse_split[verse_idx] + ' '
+                    for verse_idx in range(split_idx,len(verse_split)):
+                        text2 += verse_split[verse_idx] + ' '
+
+                    text1 = text1 + '..'
+                    # print('text1', text1)
+                    # print(len(text1))
+
+                    # print('text2', text2)
+                    text2 = '.. ' + text2 
+                    # print(len(text2))
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
+                    slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
+                    slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.bibleText[i]['book']
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text2
+                else:
+                    slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[i]['verses'][j]
 
     def create_message_slide(self):
         for i in range(len(self.message)):
@@ -260,8 +345,8 @@ class Outline2pptx:
                             if len(verses_word) + len(verse_split[verse_idx+1]) > self.max_char:
                                 split_idx = verse_idx
                                 break
-                        print('split id',split_idx)
-                        print(verse_split[split_idx])
+                        # print('split id',split_idx)
+                        # print(verse_split[split_idx])
                         text1 = ''
                         text2 = ''
                         for verse_idx in range(split_idx):
@@ -270,12 +355,12 @@ class Outline2pptx:
                             text2 += verse_split[verse_idx] + ' '
 
                         text1 = text1 + '..'
-                        print('text1', text1)
-                        print(len(text1))
+                        # print('text1', text1)
+                        # print(len(text1))
 
-                        print('text2', text2)
+                        # print('text2', text2)
                         text2 = '.. ' + text2 
-                        print(len(text2))
+                        # print(len(text2))
                         slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text1
                         slide_temp = duplicate_slide(self.prs, TEMPLATE_TEXT_IDX)
                         slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.message[i]['book']
@@ -296,6 +381,7 @@ class Outline2pptx:
 
 
 def main(args=None):
+    print('Python Script to convert Preaching Outline to PPTX. Default outline document is sample.docx.')
     print('To create two versions: use --two_versions')
     # Parse arguments
     if args is None:
@@ -313,14 +399,16 @@ def main(args=None):
     parser.add_argument('--out_pptx2', type=str, default='out2.pptx',help="Path to 2nd output outline pptx file. Default = out2.pptx")    
 
     args = parser.parse_args(args)
-    print(args.two_versions)
+    print('Two versions: ',args.two_versions)
     # print('verbose', args.verbose)
-
+    print('Converting first powerpoint.')
     out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template, out_pptx=args.out_pptx,template_id = 0)
     out2pptx.create_pptx()
     print('Powerpoint written at ', args.out_pptx)
 
     if args.two_versions:
+        print('Converting second powerpoint.')
+
         out2pptx = Outline2pptx(verbose=args.verbose, doc_fn = args.input_docx, template_pptx = args.input_template2, out_pptx=args.out_pptx2, template_id =1)
         out2pptx.create_pptx()
         print('Powerpoint written at ', args.out_pptx2)

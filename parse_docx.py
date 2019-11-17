@@ -138,10 +138,12 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 	venue = ''
 	date = ''
 	author = 'Bp. Reuben Abante'
-	text_verses = []
-	text_book = ''
+	# text_verses = []
+	# text_book = ''
 	temp_book = ''
+
 	temp_verses = []
+	bibleText = [] # {'book': 'verses'}
 	bibleReading = [] # {'book': 'verses'}
 	message = []
 	doc = Document(doc_fn)
@@ -167,26 +169,63 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 	if verbose == True:
 		print(occasion, theme, venue, date)
 
+	i = 0
 	# for para in doc.paragraphs:
-	for i in range(len(doc.paragraphs)):
+	while i <(len(doc.paragraphs)):
 		if 'Text/s' in doc.paragraphs[i].text:
 			i+=1
+			if i >= len(doc.paragraphs):
+				break
 			while(len(doc.paragraphs[i].text)==0):
 				i += 1
-			text_book = doc.paragraphs[i].text.strip()
-			i+=1	
-			while(doc.paragraphs[i].text != 'KJV'):
+				if i >= len(doc.paragraphs):
+					break
+			while(1):
+				# text_book = doc.paragraphs[i].text.strip()
+				# i+=1	
+				# while(doc.paragraphs[i].text != 'KJV'):
+				# 	while(len(doc.paragraphs[i].text)==0):
+				# 		i += 1
+				# 	# print('text: ', doc.paragraphs[i].text)	
+				# 	# print('text: ', len(doc.paragraphs[i].text))	
+				# 	if doc.paragraphs[i].text == 'KJV':
+				# 		break
+				# 	text_verses.append(doc.paragraphs[i].text.strip())
+					
+				# 	# elif len(doc.paragraphs[i].text) == 0:
+				# 		# print('throw')
+				# 	i += 1
+				temp_book = doc.paragraphs[i].text.strip()
+				# print('temp book', temp_book)
+				i+=1
+				if i >= len(doc.paragraphs):
+					break	
+				while((doc.paragraphs[i].text != 'KJV') and (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE') and (doc.paragraphs[i].text != 'ESV') and (doc.paragraphs[i].text != 'NKJV')):
+					while(len(doc.paragraphs[i].text)==0):
+						i += 1
+						if i >= len(doc.paragraphs):
+							break
+					# print('text: ', doc.paragraphs[i].text)	
+					# print('text: ', len(doc.paragraphs[i].text))	
+					temp_verses.append(doc.paragraphs[i].text.strip())
+					# if (doc.paragraphs[i].text != 'KJV') or (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE'):
+					# 	break
+					i += 1
+					if i >= len(doc.paragraphs):
+						break
+				bibleText.append({'book':temp_book, 'verses':temp_verses})
+				temp_verses = []
+				i += 1
+				if i >= len(doc.paragraphs):
+					break
 				while(len(doc.paragraphs[i].text)==0):
 					i += 1
-				# print('text: ', doc.paragraphs[i].text)	
-				# print('text: ', len(doc.paragraphs[i].text))	
-				if doc.paragraphs[i].text == 'KJV':
+				if i >= len(doc.paragraphs):
 					break
-				text_verses.append(doc.paragraphs[i].text.strip())
-				
-				# elif len(doc.paragraphs[i].text) == 0:
-					# print('throw')
-				i += 1
+				if 'Bible Reading' in doc.paragraphs[i].text:
+					break
+
+		i+=1
 	# for i in range(len(doc.paragraphs)):
 	i = 0
 	while(i < len(doc.paragraphs)):
@@ -328,7 +367,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 	# for text in text_verses:
 	# 	print(text)
 
-	return title, occasion, theme, venue, date, author, text_book, text_verses, bibleReading, message
+	return title, occasion, theme, venue, date, author, bibleText, bibleReading, message
 
 def parseLyrics(doc_fn = 'sample_lyrics.docx', verbose = False):
 
