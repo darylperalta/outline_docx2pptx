@@ -55,6 +55,7 @@ bibleBooks = [
     "Lamentations",
     "Ezekiel",
     "Daniel",
+    "Dan",    
     "Hosea",
     "Joel",
     "Amos",
@@ -417,7 +418,7 @@ def parseLyricsPPTX(lyrics_dir = 'lyrics_dir\\', verbose = True):
 						lyrics.append(text)
 			song_lyrics.append(lyrics)
 
-	song_fn.sort()
+	# song_fn.sort()
 	# print(song_fn)
 	# print('song lyrics')
 	# print(song_lyrics)
