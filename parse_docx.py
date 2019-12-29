@@ -14,7 +14,7 @@ bibleBooks = [
 
     "Exodus",
     "Exo",
-
+    "Ex",
     "Leviticus",
     "Lev ",
 
@@ -67,6 +67,7 @@ bibleBooks = [
     "Zephaniah",
     "Haggai",
     "Zechariah",
+    "Mal",
     "Malachi",
     "Matthew",
     "Matt",
