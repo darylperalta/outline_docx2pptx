@@ -52,11 +52,13 @@ bibleBooks = [
     "Isaiah",
     "Isa",
     "Jeremiah",
+    "Jer",
     "Lamentations",
     "Ezekiel",
     "Daniel",
     "Dan",    
     "Hosea",
+    "Hos",
     "Joel",
     "Amos",
     "Obadiah",
@@ -251,8 +253,8 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 						i += 1
 						if i >= len(doc.paragraphs):
 							break
-					# print('text: ', doc.paragraphs[i].text)	
-					# print('text: ', len(doc.paragraphs[i].text))	
+					# print('bible reading:: ', doc.paragraphs[i].text)	
+					# print('bible reading: ', len(doc.paragraphs[i].text))	
 					temp_verses.append(doc.paragraphs[i].text.strip())
 					# if (doc.paragraphs[i].text != 'KJV') or (doc.paragraphs[i].text != 'AMP') and (doc.paragraphs[i].text != 'BBE'):
 					# 	break
@@ -325,7 +327,7 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 					else:
 						temp_book = doc.paragraphs[i].text.strip()
 						i+=1
-						while((doc.paragraphs[i].text.strip() != 'KJV') and (doc.paragraphs[i].text.strip() != 'AMP') and (doc.paragraphs[i].text.strip() != 'BBE') and (doc.paragraphs[i].text.strip() != 'ESV') and (doc.paragraphs[i].text.strip() != 'NKJV')):
+						while((doc.paragraphs[i].text.strip() != 'KJV') and (doc.paragraphs[i].text.strip() != 'AMP') and (doc.paragraphs[i].text.strip() != 'BBE') and (doc.paragraphs[i].text.strip() != 'ESV') and (doc.paragraphs[i].text.strip() != 'NKJV') and (doc.paragraphs[i].text.strip() != 'CJB')):
 							while(len(doc.paragraphs[i].text)==0):
 								i += 1
 								if i >= len(doc.paragraphs):
