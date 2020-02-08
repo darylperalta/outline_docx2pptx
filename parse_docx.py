@@ -14,7 +14,7 @@ bibleBooks = [
 
     "Exodus",
     "Exo",
-
+    "Ex",
     "Leviticus",
     "Lev ",
 
@@ -26,6 +26,7 @@ bibleBooks = [
     "Deut",
 
     "Joshua",
+    "Josh",
     "Judges",
     "Ruth",
     "1 Samuel",
@@ -69,6 +70,7 @@ bibleBooks = [
     "Zephaniah",
     "Haggai",
     "Zechariah",
+    "Mal",
     "Malachi",
     "Matthew",
     "Matt",
