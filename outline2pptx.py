@@ -164,6 +164,8 @@ class Outline2pptx:
         self.venue = venue
         self.date = date
         self.speaker = speaker
+        self.speaker_title = 'Senior Pastor'
+        self.location = 'Tatalon, Quezon City'
         # self.text_book = text_book
         # self.text_verses = text_verses
         self.bibleText = bibleText
@@ -172,12 +174,16 @@ class Outline2pptx:
         self.prs = Presentation(template_pptx)
         self.out_pptx = out_pptx
         self.message = message
+        self.template_type = '2020' #new options for new template of speaker and title slides
+        self.template_id = template_id
         # self.max_char = 143
         # self.max_char = 163
-        if template_id == 0:
+        if self.template_id == 0:
             # self.max_char = 143
-            self.max_char = 163
-            self.max_char2L = 84
+            # self.max_char = 163
+            # self.max_char2L = 84
+            self.max_char = 126
+            self.max_char2L = 126
         else:
             # self.max_char = 195
             self.max_char = 193
@@ -221,25 +227,76 @@ class Outline2pptx:
         #     print('%d %s' % (shape.placeholder_format.idx, shape.name))
         # print(len(slide_temp.shapes))
         # slide_temp.shapes[0].text = 'try'
-        slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.speaker
-        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.venue
-        slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.occasion + ', '+ self.date
+        if self.template_type == '2020':
+            # print(len(slide_temp.shapes))
+            # print(len(slide_temp.shapes[1].text_frame.paragraphs[3].runs))
+            # print(slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text)
+            # max_len = 90 
+            # print(slide_temp.shapes[1].text_frame.paragraphs[3].runs[1].text)
+
+            # print(slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text)
+            if self.template_id == 0:
+                max_len_par = [90, 113]
+            else:
+                max_len_par = [135, 159]
+            slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.speaker
+            slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.speaker_title
+            slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.venue + ((max_len_par[0]-len(self.venue+self.occasion))*' ')  + self.occasion
+            slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text =  self.location + ((max_len_par[1]-len(self.location+self.date))*' ') + self.date
+            if len(slide_temp.shapes[1].text_frame.paragraphs[3].runs) > 1:
+                slide_temp.shapes[1].text_frame.paragraphs[3].runs[1].text =  ''
+
+            # slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text =  'Tatalon, Quezon City' + self.date
+            # slide_temp.shapes[1].text_frame.paragraphs[3].runs[1].text =  ''
+            # slide_temp.shapes[1].text_frame.paragraphs[3].runs[2].text =  ''
+            # slide_temp.shapes[1].text_frame.paragraphs[3].runs[3].text =  ''
+            
+        
+        else:
+            slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.speaker
+            slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.venue
+            slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.occasion + ', '+ self.date
 
     def create_title_slide(self):
-        text_books = ''
-        for text_id in range(len(self.bibleText)):
-            if text_id != len(self.bibleText) -1:
-                text_books = text_books + self.bibleText[text_id]['book'] + '; '
+        if self.template_type == '2020':
+            if self.template_id == 0:
+                max_len_par = [70, 94]
             else:
-                text_books = text_books + self.bibleText[text_id]['book']
-        slide_temp = duplicate_slide(self.prs, TEMPLATE_TITLE_IDX)
-        slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.title
-        # slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[0]['book']
-        slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text_books
+                max_len_par = [135, 159]
+            text_books = ''
+            for text_id in range(len(self.bibleText)):
+                if text_id != len(self.bibleText) -1:
+                    text_books = text_books + self.bibleText[text_id]['book'] + '; '
+                else:
+                    text_books = text_books + self.bibleText[text_id]['book']
+            slide_temp = duplicate_slide(self.prs, TEMPLATE_TITLE_IDX)
+            slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.title
+            slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text_books
 
-        slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.speaker
-        slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text = self.venue
-        slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text = self.occasion + ', '+ self.date
+            slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.speaker + ' - '+ self.speaker_title
+            slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text = self.venue + ((max_len_par[0]-len(self.venue+self.occasion))*' ') + self.occasion
+            if len(slide_temp.shapes[1].text_frame.paragraphs[3].runs) > 1:
+                for i in range(len(slide_temp.shapes[1].text_frame.paragraphs[3].runs)-1):
+                    slide_temp.shapes[1].text_frame.paragraphs[3].runs[i+1].text =  ''
+            slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text =  self.location + ((max_len_par[1]-len(self.location+self.date))*' ')+ self.date
+            if len(slide_temp.shapes[1].text_frame.paragraphs[4].runs) > 1:
+                for i in range(len(slide_temp.shapes[1].text_frame.paragraphs[4].runs)-1):
+                    slide_temp.shapes[1].text_frame.paragraphs[4].runs[i+1].text =  ''
+        else:
+            text_books = ''
+            for text_id in range(len(self.bibleText)):
+                if text_id != len(self.bibleText) -1:
+                    text_books = text_books + self.bibleText[text_id]['book'] + '; '
+                else:
+                    text_books = text_books + self.bibleText[text_id]['book']
+            slide_temp = duplicate_slide(self.prs, TEMPLATE_TITLE_IDX)
+            slide_temp.shapes[1].text_frame.paragraphs[0].runs[0].text = self.title
+            # slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = self.bibleText[0]['book']
+            slide_temp.shapes[1].text_frame.paragraphs[1].runs[0].text = text_books
+
+            slide_temp.shapes[1].text_frame.paragraphs[2].runs[0].text = self.speaker
+            slide_temp.shapes[1].text_frame.paragraphs[3].runs[0].text = self.venue
+            slide_temp.shapes[1].text_frame.paragraphs[4].runs[0].text = self.occasion + ', '+ self.date
 
     def create_text_slide(self):
         for i in range(len(self.bibleReading)):
@@ -423,11 +480,11 @@ def main(args=None):
     parser = argparse.ArgumentParser(description='Input File.')
     #
     parser.add_argument('--input_docx', type=str, default='sample.docx',help="Path to input outline docx file. Default = sample.docx")
-    parser.add_argument('--input_template', type=str, default='template.pptx',help="Path to input outline template pptx file. Default = template.pptx")
+    parser.add_argument('--input_template', type=str, default='template_2020.pptx',help="Path to input outline template pptx file. Default = template.pptx")
     parser.add_argument('--out_pptx', type=str, default='out.pptx',help="Path to output outline pptx file. Default = out.pptx")
     parser.add_argument('--two_versions', dest='two_versions', action='store_true', help="Creates two versions of pptx", default=True)
     parser.add_argument('--verbose', dest='verbose', action='store_true', help="Verbose")
-    parser.add_argument('--input_template2', type=str, default='template2.pptx',help="Path to input 2nd outline template pptx file. Default = template2.pptx")
+    parser.add_argument('--input_template2', type=str, default='template2_2020.pptx',help="Path to input 2nd outline template pptx file. Default = template2.pptx")
     parser.add_argument('--out_pptx2', type=str, default='out2.pptx',help="Path to 2nd output outline pptx file. Default = out2.pptx")    
 
     args = parser.parse_args(args)
