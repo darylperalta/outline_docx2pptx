@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> LAVNET</title>
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+      <strong><nav>
+         <ul class="menu">
+           <!-- <li><a href="{{ url_for('about') }}">About</a></li> -->
+           <li><a href="{{ url_for('lyrics_home') }}">Convert Lyrics to PPTX</a></li>
+           <li><a href="{{ url_for('outline_home') }}">Convert Preaching Outline to PPTX</a></li>
+         </ul>
+       </nav></strong>
+
+       <!-- <p>Created by: 
+        Daryl Peralta
+        Email: daryl.peralta@eee.upd.edu.ph
+        </p> -->
+    {% endblock %}
+  </body>
+</html>

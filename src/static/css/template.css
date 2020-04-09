@@ -1,0 +1,9 @@
+body {
+  font-family: 'Arial';
+}
+
+.logo {
+  background-color: #0c083b;
+  padding: 10px;
+  color: white;
+}
