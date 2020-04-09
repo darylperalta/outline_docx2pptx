@@ -1,7 +1,7 @@
 import os
 
 
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, send_file
 from lyrics2pptx import Lyrics2pptx
 
 __author__ = 'ibininja'
@@ -39,7 +39,7 @@ def upload():
         input_docx = os.path.join(target, filename)
         print('input dox in', input_docx)
 
-    out_fn = os.path.join(APP_ROOT, 'out_lyrics.pptx')
+    out_fn = os.path.join(APP_ROOT, 'downloads/out_lyrics.pptx')
     print('input template', INPUT_TEMPLATE)
 
     print('input docx',input_docx)
@@ -50,15 +50,19 @@ def upload():
     # return send_from_directory("images", filename, as_attachment=True)
     return render_template("complete.html", image_name=filename)
 
+@app.route('/download_lyrics')
+def download_lyrics():
+    return send_file("downloads/out_lyrics.pptx")
+
 @app.route('/upload/<filename>')
-def send_image(filename):
-    return send_from_directory("images", filename)
+# def send_image(filename):
+#     return send_from_directory("images", filename)
 
-@app.route('/gallery')
-def get_gallery():
-    image_names = os.listdir('./images')
-    print(image_names)
-    return render_template("gallery.html", image_names=image_names)
+# @app.route('/gallery')
+# def get_gallery():
+#     image_names = os.listdir('./images')
+#     print(image_names)
+#     return render_template("gallery.html", image_names=image_names)
 
-if __name__ == "__main__":
-    app.run(port=4555, debug=True)
+# if __name__ == "__main__":
+#     app.run(port=4555, debug=True)
