@@ -422,12 +422,44 @@ def parseLyricsPPTX(lyrics_dir = 'lyrics_dir\\', verbose = True):
 						lyrics.append(text)
 			song_lyrics.append(lyrics)
 
+def parseLyricsPPTXsingle(song_fn, verbose = False):
+
+	# doc = Document(doc_fn)
+	# song_fn = glob(lyrics_dir+'*.pptx')
+	# # song_fn2 = glob(lyrics_dir+'*.ppt')
+	# # song_fn = song_fn + song_fn2
+	# song_lyrics = []
+	# for i in range(len(song_fn)):
+	# 	# print(song_fn[i])
+	prs = Presentation(song_fn)
+	lyrics = []
+	if verbose == True:
+        # print('start')
+		print(len(prs.slides))
+	for slide in prs.slides:
+		# print(len(slide.shapes))
+		i = 0
+		for shape in slide.shapes:
+			text = ''
+			if not shape.has_text_frame:
+				continue
+			for paragraph in shape.text_frame.paragraphs:
+			    for run in paragraph.runs:
+			    	# print('text', run.text)
+			    	text = text + ' ' + run.text.strip()
+			    	text = text.strip()
+			    	# print('text', text)
+			if (len(text) != 0) and (text != 'end') and (text != 'END') and (text != 'end.') and (text != 'END.') and (text != 'CHORUS:') and (text != 'CHORUS.') and (text != 'CHORUS') and (text != 'Chorus:') and (text != 'Chorus.') and (text != 'Chorus'):
+				lyrics.append(text)
+		# song_lyrics.append(lyrics)
+
+
 	# song_fn.sort()
 	# print(song_fn)
 	# print('song lyrics')
 	# print(song_lyrics)
 
-	return song_fn, song_lyrics
+	return lyrics
 
 def main():
 	# parseLyrics()

@@ -4,7 +4,7 @@ import os
 from flask import Flask, request, render_template, send_from_directory, send_file
 from lyrics2pptx import Lyrics2pptx
 from outline2pptx import Outline2pptx
-
+from shiftPPTX import ShiftLyrics2pptxSingle
 
 app = Flask(__name__)
 
@@ -20,12 +20,12 @@ TEMPLATE_OUTLINE2 = os.path.join(APP_ROOT, 'doc_templates/template2_2020.pptx')
 def index():
     return render_template("home.html")
 
-@app.route("/lyrics_home")
-def lyrics_home():
-    return render_template("upload.html")
-
 @app.route("/about")
 def about():
+    return render_template("upload.html")
+
+@app.route("/lyrics_home")
+def lyrics_home():
     return render_template("upload.html")
 
 @app.route("/upload", methods=["POST"])
@@ -59,11 +59,71 @@ def upload():
     out2pptx.create_pptx()
 
     # return send_from_directory("images", filename, as_attachment=True)
-    return render_template("complete.html", image_name=filename)
+    return render_template("complete.html", out_name='out_lyrics.pptx')
 
-@app.route('/download_lyrics')
-def download_lyrics():
-    return send_file("downloads/out_lyrics.pptx")
+@app.route('/download_lyrics/<filename>')
+def download_lyrics(filename):
+    return send_from_directory('downloads', filename)
+
+@app.route("/shiftlyrics_home")
+def shiftlyrics_home():
+    return render_template("upload_shift_outline.html")
+
+@app.route("/upload_shiftlyrics", methods=["POST"])
+def upload_shiftlyrics():
+    target = os.path.join(APP_ROOT, 'input')
+    print(target)
+    if not os.path.isdir(target):
+            os.mkdir(target)
+    else:
+        print("Couldn't create upload directory: {}".format(target))
+    print('request files template', request.files.getlist("file"))
+    print('request files template',request.files.getlist("templatefile"))
+
+    input_pptx = ''
+    for upload in request.files.getlist("file"):
+        print(upload)
+        print("{} is the file name".format(upload.filename))
+        filename = upload.filename
+        # destination = "/".join([target, filename])
+        print ("Accept incoming file:", filename)
+        # print ("Save it to:", destination)
+        # upload.save(destination)
+        input_pptx = os.path.join(target, filename)
+        upload.save(input_pptx)
+        print('input dox in', input_pptx)
+    input_filename = filename
+    print('input docx',input_pptx)
+    print(len(input_pptx))
+
+    input_template = ''
+
+
+    for upload in request.files.getlist("templatefile"):
+        print(upload)
+        print("{} is the file name".format(upload.filename))
+        filename = upload.filename
+        # destination = "/".join([target, filename])
+        print ("Accept incoming file:", filename)
+        # print ("Save it to:", destination)
+        # upload.save(destination)
+        input_template = os.path.join(target, filename)
+        upload.save(input_template)
+        print('input template in', input_template)
+
+    out_fn = os.path.join(APP_ROOT, 'downloads/' +  input_filename.split('.pptx')[0] + '-new.pptx')
+    print('input template', input_template)
+    print('out_fn', out_fn)
+
+    # out2pptx = Lyrics2pptx(verbose=False, doc_fn = input_docx, template_pptx = INPUT_TEMPLATE, out_pptx=out_fn)
+    # out2pptx.create_pptx()
+
+    out2pptx = ShiftLyrics2pptxSingle(verbose=False, doc_fn = input_pptx, template_pptx = input_template, out_pptx=out_fn)
+    out2pptx.create_pptx()
+
+
+    # return send_from_directory("images", filename, as_attachment=True)
+    return render_template("complete.html", out_name=os.path.split(out_fn)[-1])
 
 @app.route("/outline_home")
 def outline_home():
