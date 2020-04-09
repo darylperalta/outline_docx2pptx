@@ -314,10 +314,10 @@ def parseOutline(doc_fn = 'sample.docx', verbose = False):
 						# print('do something')
 						a = temp_text.split('(KJV)')
 						if len(a[1]) != 0:
-							temp_book = a[0]
-							temp_verses.append(a[1])
+							temp_book = a[0].strip()
+							temp_verses.append(a[1].strip())
 						else:
-							temp_book = a[0]
+							temp_book = a[0].strip()
 							i+=1
 							while (len(doc.paragraphs[i].text)!=0):
 								temp_verses.append(doc.paragraphs[i].text.strip())
